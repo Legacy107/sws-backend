@@ -1,0 +1,109 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateUserInput {
+  nickname: String!
+  password: String!
+  refreshToken: String
+  role: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input GetManyInput {
+  """
+  {key: "ASC" or "DESC" or "asc" or "desc" or 1 or -1} or {key: {direction: "ASC" or "DESC" or "asc" or "desc", nulls: "first" or "last" or "FIRST" or "LAST"}}}
+  """
+  order: JSON
+  pagination: IPagination
+  where: JSON
+}
+
+input GetOneInput {
+  where: JSON!
+}
+
+type GetUserType {
+  count: Float
+  data: [User!]
+}
+
+input IPagination {
+  """
+  Started from 0
+  """
+  page: Int!
+
+  """
+  Size of page
+  """
+  size: Int!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type JwtWithUser {
+  jwt: String!
+  user: User!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+  deleteFiles(keys: [String!]!): Boolean!
+  deleteUser(id: String!): JSON!
+  refreshAccessToken: JwtWithUser!
+  signIn(input: SignInInput!): JwtWithUser!
+  signOut: Boolean!
+  signUp(input: SignUpInput!): JwtWithUser!
+  updateUser(id: String!, input: UpdateUserInput!): JSON!
+  uploadFile(file: Upload!): String!
+  uploadFiles(files: [Upload!]!): [String!]!
+}
+
+type Query {
+  getManyUserList(input: GetManyInput): GetUserType!
+  getMe: User!
+  getOneUser(input: GetOneInput!): User!
+}
+
+input SignInInput {
+  password: String!
+  username: String!
+}
+
+input SignUpInput {
+  nickname: String!
+  password: String!
+  username: String!
+}
+
+input UpdateUserInput {
+  nickname: String
+  password: String
+  refreshToken: String
+  role: String
+  username: String
+}
+
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
+
+type User {
+  createdAt: DateTime!
+  id: ID!
+  nickname: String!
+  refreshToken: String
+  role: String!
+  updatedAt: DateTime!
+  username: String!
+}

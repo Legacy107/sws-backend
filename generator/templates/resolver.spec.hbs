@@ -1,0 +1,122 @@
+import { Test, TestingModule } from '@nestjs/testing'
+import { {{pascalCase tableName}}Resolver } from './{{tableName}}.resolver'
+import {
+  MockService,
+  MockServiceFactory,
+} from 'src/common/factory/mockFactory'
+import { {{pascalCase tableName}}Service } from './{{tableName}}.service'
+import { GetManyInput, GetOneInput } from 'src/common/graphql/custom.input'
+import { {{pascalCase tableName}} } from './entities/{{tableName}}.entity'
+import { UtilModule } from 'src/common/shared/services/util.module';
+import { UtilService } from 'src/common/shared/services/util.service';
+
+import { Create{{pascalCase tableName}}Input, Update{{pascalCase tableName}}Input } from './inputs/{{tableName}}.input'
+
+describe('{{pascalCase tableName}}Resolver', () => {
+  let resolver: {{pascalCase tableName}}Resolver
+  let mockedService: MockService<{{pascalCase tableName}}Service>
+  let utilService: UtilService;
+
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [UtilModule],
+      providers: [
+        {{pascalCase tableName}}Resolver,
+        {
+          provide: {{pascalCase tableName}}Service,
+          useFactory: MockServiceFactory.getMockService({{pascalCase tableName}}Service),
+        },
+      ],
+    }).compile()
+
+    utilService = module.get<UtilService>(UtilService);
+    resolver = module.get<{{pascalCase tableName}}Resolver>({{pascalCase tableName}}Resolver)
+    mockedService = module.get<MockService<{{pascalCase tableName}}Service>>({{pascalCase tableName}}Service)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
+  it('Calling "Get many {{tableName}} list" method', () => {
+    const qs: GetManyInput<{{pascalCase tableName}}> = {
+      where: { 
+  {{#if (is "increment" idType)}}
+        id: utilService.getRandomNumber(0,999999)
+  {{else}}
+        id: utilService.getRandomUUID
+  {{/if}}
+      },
+    }
+
+    const gqlQuery = `
+      query GetMany{{pascalCase tableName}}List {
+        getMany{{pascalCase tableName}}List {
+          data {
+            id
+          }
+        }
+      }
+    `
+
+    expect(resolver.getMany{{pascalCase tableName}}List(qs, gqlQuery)).not.toEqual(null)
+    expect(mockedService.getMany).toHaveBeenCalledWith(qs, gqlQuery)
+  })
+
+  it('Calling "Get one {{tableName}} list" method', () => {
+    const qs: GetOneInput<{{pascalCase tableName}}> = {
+      where: { 
+{{#if (is "increment" idType)}}
+        id: utilService.getRandomNumber(0,999999)
+{{else}}
+        id: utilService.getRandomUUID
+{{/if}}
+      },
+    }
+
+    const gqlQuery = `
+      query GetOne{{pascalCase tableName}} {
+        getOne{{pascalCase tableName}} {
+          data {
+            id
+          }
+        }
+      }
+    `
+
+    expect(resolver.getOne{{pascalCase tableName}}(qs, gqlQuery)).not.toEqual(null)
+    expect(mockedService.getOne).toHaveBeenCalledWith(qs, gqlQuery)
+  })
+
+  it('Calling "Create {{tableName}}" method', () => {
+    const dto = new Create{{pascalCase tableName}}Input()
+
+    expect(resolver.create{{pascalCase tableName}}(dto)).not.toEqual(null)
+    expect(mockedService.create).toHaveBeenCalledWith(dto)
+  })
+
+  it('Calling "Update {{tableName}}" method', () => {
+{{#if (is "increment" idType)}}
+    const id = utilService.getRandomNumber(0,999999);
+{{else}}
+    const id = utilService.getRandomUUID;
+{{/if}}
+    const dto = new Update{{pascalCase tableName}}Input()
+
+    resolver.update{{pascalCase tableName}}(id, dto)
+
+    expect(mockedService.update).toHaveBeenCalledWith(id, dto)
+  })
+
+  it('Calling "Delete {{tableName}}" method', () => {
+{{#if (is "increment" idType)}}
+    const id = utilService.getRandomNumber(0,999999);
+{{else}}
+    const id = utilService.getRandomUUID;
+{{/if}}
+
+    resolver.delete{{pascalCase tableName}}(id)
+
+    expect(mockedService.delete).toHaveBeenCalledWith(id)
+  })
+})
