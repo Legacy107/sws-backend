@@ -41,7 +41,7 @@ export class SettingService {
       database:
         this.utilService.nodeEnv === 'test'
           ? ':memory:'
-          : join(process.cwd(), 'sws.sqlite3'),
+          : join(process.cwd(), this.utilService.getString('DB_FILE_PATH')),
       entities:
         this.utilService.nodeEnv === 'test'
           ? [join(process.cwd(), 'src', '**', '*.entity.{ts,js}')]
