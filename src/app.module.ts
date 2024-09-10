@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
+
 import { CustomCacheModule } from './cache/custom-cache.module';
 import { getEnvPath } from './common/helper/env.helper';
 import { SettingModule } from './common/shared/setting/setting.module';
@@ -26,6 +28,13 @@ import { HealthModule } from './health/health.module';
       inject: [SettingService],
       useFactory: (settingService: SettingService) =>
         settingService.typeOrmUseFactory,
+    }),
+    NestjsQueryGraphQLModule.forRoot({
+      dataLoader: {
+        batchScheduleFn(callback) {
+          setTimeout(callback, 250);
+        },
+      },
     }),
     CompanyModule,
     HealthModule,
