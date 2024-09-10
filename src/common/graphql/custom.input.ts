@@ -2,7 +2,7 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import GraphQLJSON from 'graphql-type-json';
-import { FindOptionsOrder } from 'typeorm';
+import { FindOptionsOrder, FindOptionsRelations } from 'typeorm';
 
 import { IWhere } from './utils/types';
 
@@ -37,8 +37,12 @@ export class GetManyInput<T> {
   @Field(() => GraphQLJSON, {
     nullable: true,
     description:
-      '{key: "ASC" or "DESC" or "asc" or "desc" or 1 or -1} or {key: {direction: "ASC" or "DESC" or "asc" or "desc", nulls: "first" or "last" or "FIRST" or "LAST"}}}',
+      '{key: "ASC" or "DESC" or "asc" or "desc" or 1 or -1} or {key: {direction: "ASC" or "DESC" or "asc" or "desc", nulls: "first" or "last" or "FIRST" or "LAST"}} or nested ordering for relations',
   })
   @IsOptional()
   order?: FindOptionsOrder<T>;
+
+  @Field(() => [String], { nullable: true })
+  @IsOptional()
+  relations?: FindOptionsRelations<T>;
 }

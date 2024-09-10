@@ -4,14 +4,12 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AuthModule } from './auth/auth.module';
 import { CustomCacheModule } from './cache/custom-cache.module';
 import { getEnvPath } from './common/helper/env.helper';
 import { SettingModule } from './common/shared/setting/setting.module';
 import { SettingService } from './common/shared/setting/setting.service';
+import { CompanyModule } from './company/company.module';
 import { HealthModule } from './health/health.module';
-import { UploadModule } from './upload/upload.module';
-import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -29,9 +27,7 @@ import { UserModule } from './user/user.module';
       useFactory: (settingService: SettingService) =>
         settingService.typeOrmUseFactory,
     }),
-    UserModule,
-    AuthModule,
-    UploadModule,
+    CompanyModule,
     HealthModule,
     CustomCacheModule.forRoot(),
   ],

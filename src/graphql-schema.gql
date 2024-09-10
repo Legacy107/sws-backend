@@ -2,12 +2,308 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input CreateUserInput {
-  nickname: String!
-  password: String!
-  refreshToken: String
-  role: String!
-  username: String!
+input AddPriceToCompanyInput {
+  """
+  The id of the record.
+  """
+  id: ID!
+
+  """
+  The ids of the relations.
+  """
+  relationIds: [ID!]!
+}
+
+type Company {
+  canonical_url: String
+  date_generated: DateTime
+  exchange_country_iso: String
+  exchange_symbol: String
+  id: ID!
+  listing_currency_iso: String
+  name: String!
+  price(
+    """
+    Specify to filter the records returned.
+    """
+    filter: CompanyPriceCloseFilter! = {}
+
+    """
+    Limit or page results.
+    """
+    paging: CursorPaging! = { first: 10 }
+
+    """
+    Specify to sort results.
+    """
+    sorting: [CompanyPriceCloseSort!]! = [{ direction: DESC, field: date }]
+  ): CompanyPriceConnection!
+  score: CompanyScore!
+  security_name: String
+  ticker_symbol: String
+  unique_symbol: String
+  unique_symbol_slug: String
+}
+
+type CompanyConnection {
+  """
+  Array of nodes.
+  """
+  nodes: [Company!]!
+
+  """
+  Paging information
+  """
+  pageInfo: OffsetPageInfo!
+
+  """
+  Fetch total count of records
+  """
+  totalCount: Int!
+}
+
+input CompanyDeleteFilter {
+  and: [CompanyDeleteFilter!]
+  exchange_symbol: StringFieldComparison
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [CompanyDeleteFilter!]
+  ticker_symbol: StringFieldComparison
+  total_score: NumberFieldComparison
+  unique_symbol: StringFieldComparison
+}
+
+type CompanyDeleteResponse {
+  canonical_url: String
+  date_generated: DateTime
+  exchange_country_iso: String
+  exchange_symbol: String
+  id: ID
+  listing_currency_iso: String
+  name: String
+  security_name: String
+  ticker_symbol: String
+  unique_symbol: String
+  unique_symbol_slug: String
+}
+
+input CompanyFilter {
+  and: [CompanyFilter!]
+  exchange_symbol: StringFieldComparison
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [CompanyFilter!]
+  price: CompanyFilterCompanyPriceCloseFilter
+  score: CompanyFilterCompanyScoreFilter
+  ticker_symbol: StringFieldComparison
+  total_score: NumberFieldComparison
+  unique_symbol: StringFieldComparison
+}
+
+input CompanyFilterCompanyPriceCloseFilter {
+  and: [CompanyFilterCompanyPriceCloseFilter!]
+  company_id: StringFieldComparison
+  date: StringFieldComparison
+  date_created: DateFieldComparison
+  or: [CompanyFilterCompanyPriceCloseFilter!]
+  price: NumberFieldComparison
+}
+
+input CompanyFilterCompanyScoreFilter {
+  and: [CompanyFilterCompanyScoreFilter!]
+  company_id: StringFieldComparison
+  date_generated: DateFieldComparison
+  dividend: NumberFieldComparison
+  future: NumberFieldComparison
+  health: NumberFieldComparison
+  id: IDFilterComparison
+  management: NumberFieldComparison
+  misc: NumberFieldComparison
+  or: [CompanyFilterCompanyScoreFilter!]
+  past: NumberFieldComparison
+  total: NumberFieldComparison
+  value: NumberFieldComparison
+}
+
+type CompanyPriceClose {
+  company_id: String!
+  date: String!
+  date_created: DateTime!
+  price: Float!
+}
+
+type CompanyPriceCloseEdge {
+  """
+  Cursor for this node.
+  """
+  cursor: ConnectionCursor!
+
+  """
+  The node containing the CompanyPriceClose
+  """
+  node: CompanyPriceClose!
+}
+
+input CompanyPriceCloseFilter {
+  and: [CompanyPriceCloseFilter!]
+  company: CompanyPriceCloseFilterCompanyFilter
+  company_id: StringFieldComparison
+  date: StringFieldComparison
+  date_created: DateFieldComparison
+  or: [CompanyPriceCloseFilter!]
+  price: NumberFieldComparison
+}
+
+input CompanyPriceCloseFilterCompanyFilter {
+  and: [CompanyPriceCloseFilterCompanyFilter!]
+  exchange_symbol: StringFieldComparison
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [CompanyPriceCloseFilterCompanyFilter!]
+  ticker_symbol: StringFieldComparison
+  total_score: NumberFieldComparison
+  unique_symbol: StringFieldComparison
+}
+
+input CompanyPriceCloseSort {
+  direction: SortDirection!
+  field: CompanyPriceCloseSortFields!
+  nulls: SortNulls
+}
+
+enum CompanyPriceCloseSortFields {
+  company_id
+  date
+  date_created
+  price
+}
+
+type CompanyPriceConnection {
+  """
+  Array of edges.
+  """
+  edges: [CompanyPriceCloseEdge!]!
+
+  """
+  Paging information
+  """
+  pageInfo: PageInfo!
+}
+
+type CompanyScore {
+  company_id: String!
+  date_generated: DateTime!
+  dividend: Float!
+  future: Float!
+  health: Float!
+  id: ID!
+  management: Float!
+  misc: Float!
+  past: Float!
+  sentence: String
+  total: Float!
+  value: Float!
+}
+
+input CompanySort {
+  direction: SortDirection!
+  field: CompanySortFields!
+  nulls: SortNulls
+}
+
+enum CompanySortFields {
+  exchange_symbol
+  id
+  name
+  ticker_symbol
+  total_score
+  unique_symbol
+}
+
+input CompanyUpdateFilter {
+  and: [CompanyUpdateFilter!]
+  exchange_symbol: StringFieldComparison
+  id: IDFilterComparison
+  name: StringFieldComparison
+  or: [CompanyUpdateFilter!]
+  ticker_symbol: StringFieldComparison
+  total_score: NumberFieldComparison
+  unique_symbol: StringFieldComparison
+}
+
+"""
+Cursor for paging through collections
+"""
+scalar ConnectionCursor
+
+input CreateCompany {
+  canonical_url: String
+  date_generated: DateTime
+  exchange_country_iso: String
+  exchange_symbol: String
+  id: ID!
+  listing_currency_iso: String
+  name: String!
+  security_name: String
+  ticker_symbol: String
+  unique_symbol: String
+  unique_symbol_slug: String
+}
+
+input CreateManyCompaniesInput {
+  """
+  Array of records to create
+  """
+  companies: [CreateCompany!]!
+}
+
+input CreateOneCompanyInput {
+  """
+  The record to create
+  """
+  company: CreateCompany!
+}
+
+input CursorPaging {
+  """
+  Paginate after opaque cursor
+  """
+  after: ConnectionCursor
+
+  """
+  Paginate before opaque cursor
+  """
+  before: ConnectionCursor
+
+  """
+  Paginate first
+  """
+  first: Int
+
+  """
+  Paginate last
+  """
+  last: Int
+}
+
+input DateFieldComparison {
+  between: DateFieldComparisonBetween
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  is: Boolean
+  isNot: Boolean
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
+  notBetween: DateFieldComparisonBetween
+  notIn: [DateTime!]
+}
+
+input DateFieldComparisonBetween {
+  lower: DateTime!
+  upper: DateTime!
 }
 
 """
@@ -15,95 +311,245 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-input GetManyInput {
+input DeleteManyCompaniesInput {
   """
-  {key: "ASC" or "DESC" or "asc" or "desc" or 1 or -1} or {key: {direction: "ASC" or "DESC" or "asc" or "desc", nulls: "first" or "last" or "FIRST" or "LAST"}}}
+  Filter to find records to delete
   """
-  order: JSON
-  pagination: IPagination
-  where: JSON
+  filter: CompanyDeleteFilter!
 }
 
-input GetOneInput {
-  where: JSON!
+type DeleteManyResponse {
+  """
+  The number of records deleted.
+  """
+  deletedCount: Int!
 }
 
-type GetUserType {
-  count: Float
-  data: [User!]
+input DeleteOneCompanyInput {
+  """
+  The id of the record to delete.
+  """
+  id: ID!
 }
 
-input IPagination {
-  """
-  Started from 0
-  """
-  page: Int!
-
-  """
-  Size of page
-  """
-  size: Int!
-}
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
-type JwtWithUser {
-  jwt: String!
-  user: User!
+input IDFilterComparison {
+  eq: ID
+  gt: ID
+  gte: ID
+  iLike: ID
+  in: [ID!]
+  is: Boolean
+  isNot: Boolean
+  like: ID
+  lt: ID
+  lte: ID
+  neq: ID
+  notILike: ID
+  notIn: [ID!]
+  notLike: ID
 }
 
 type Mutation {
-  createUser(input: CreateUserInput!): User!
-  deleteFiles(keys: [String!]!): Boolean!
-  deleteUser(id: String!): JSON!
-  refreshAccessToken: JwtWithUser!
-  signIn(input: SignInInput!): JwtWithUser!
-  signOut: Boolean!
-  signUp(input: SignUpInput!): JwtWithUser!
-  updateUser(id: String!, input: UpdateUserInput!): JSON!
-  uploadFile(file: Upload!): String!
-  uploadFiles(files: [Upload!]!): [String!]!
+  addPriceToCompany(input: AddPriceToCompanyInput!): Company!
+  createManyCompanies(input: CreateManyCompaniesInput!): [Company!]!
+  createOneCompany(input: CreateOneCompanyInput!): Company!
+  deleteManyCompanies(input: DeleteManyCompaniesInput!): DeleteManyResponse!
+  deleteOneCompany(input: DeleteOneCompanyInput!): CompanyDeleteResponse!
+  setPriceOnCompany(input: SetPriceOnCompanyInput!): Company!
+  setScoreOnCompany(input: SetScoreOnCompanyInput!): Company!
+  updateManyCompanies(input: UpdateManyCompaniesInput!): UpdateManyResponse!
+  updateOneCompany(input: UpdateOneCompanyInput!): Company!
+}
+
+input NumberFieldComparison {
+  between: NumberFieldComparisonBetween
+  eq: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  is: Boolean
+  isNot: Boolean
+  lt: Float
+  lte: Float
+  neq: Float
+  notBetween: NumberFieldComparisonBetween
+  notIn: [Float!]
+}
+
+input NumberFieldComparisonBetween {
+  lower: Float!
+  upper: Float!
+}
+
+type OffsetPageInfo {
+  """
+  true if paging forward and there are more records.
+  """
+  hasNextPage: Boolean
+
+  """
+  true if paging backwards and there are more records.
+  """
+  hasPreviousPage: Boolean
+}
+
+input OffsetPaging {
+  """
+  Limit the number of records returned
+  """
+  limit: Int
+
+  """
+  Offset to start returning records from
+  """
+  offset: Int
+}
+
+type PageInfo {
+  """
+  The cursor of the last returned record.
+  """
+  endCursor: ConnectionCursor
+
+  """
+  true if paging forward and there are more records.
+  """
+  hasNextPage: Boolean
+
+  """
+  true if paging backwards and there are more records.
+  """
+  hasPreviousPage: Boolean
+
+  """
+  The cursor of the first returned record.
+  """
+  startCursor: ConnectionCursor
 }
 
 type Query {
-  getManyUserList(input: GetManyInput): GetUserType!
-  getMe: User!
-  getOneUser(input: GetOneInput!): User!
+  companies(
+    """
+    Specify to filter the records returned.
+    """
+    filter: CompanyFilter! = {}
+
+    """
+    Limit or page results.
+    """
+    paging: OffsetPaging! = { limit: 10 }
+
+    """
+    Specify to sort results.
+    """
+    sorting: [CompanySort!]! = []
+  ): CompanyConnection!
+  company(
+    """
+    The id of the record to find.
+    """
+    id: ID!
+  ): Company!
 }
 
-input SignInInput {
-  password: String!
-  username: String!
-}
-
-input SignUpInput {
-  nickname: String!
-  password: String!
-  username: String!
-}
-
-input UpdateUserInput {
-  nickname: String
-  password: String
-  refreshToken: String
-  role: String
-  username: String
-}
-
-"""
-The `Upload` scalar type represents a file upload.
-"""
-scalar Upload
-
-type User {
-  createdAt: DateTime!
+input SetPriceOnCompanyInput {
+  """
+  The id of the record.
+  """
   id: ID!
-  nickname: String!
-  refreshToken: String
-  role: String!
-  updatedAt: DateTime!
-  username: String!
+
+  """
+  The ids of the relations.
+  """
+  relationIds: [ID!]!
+}
+
+input SetScoreOnCompanyInput {
+  """
+  The id of the record.
+  """
+  id: ID!
+
+  """
+  The id of relation.
+  """
+  relationId: ID!
+}
+
+"""
+Sort Directions
+"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""
+Sort Nulls Options
+"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+input StringFieldComparison {
+  eq: String
+  gt: String
+  gte: String
+  iLike: String
+  in: [String!]
+  is: Boolean
+  isNot: Boolean
+  like: String
+  lt: String
+  lte: String
+  neq: String
+  notILike: String
+  notIn: [String!]
+  notLike: String
+}
+
+input UpdateCompany {
+  canonical_url: String
+  date_generated: DateTime
+  exchange_country_iso: String
+  exchange_symbol: String
+  id: ID
+  listing_currency_iso: String
+  name: String
+  security_name: String
+  ticker_symbol: String
+  unique_symbol: String
+  unique_symbol_slug: String
+}
+
+input UpdateManyCompaniesInput {
+  """
+  Filter used to find fields to update
+  """
+  filter: CompanyUpdateFilter!
+
+  """
+  The update to apply to all records found using the filter
+  """
+  update: UpdateCompany!
+}
+
+type UpdateManyResponse {
+  """
+  The number of records updated.
+  """
+  updatedCount: Int!
+}
+
+input UpdateOneCompanyInput {
+  """
+  The id of the record to update
+  """
+  id: ID!
+
+  """
+  The update to apply.
+  """
+  update: UpdateCompany!
 }

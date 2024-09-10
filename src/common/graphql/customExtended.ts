@@ -35,9 +35,10 @@ const isEmptyObject = <T extends object>(
 export function filterOrder<T>(
   this: Repository<T>,
   order: FindOptionsOrder<T>,
+  isNested = false,
 ) {
   Object.entries(order).forEach(([key, value]: [string, ISort]) => {
-    if (!(key in this.metadata.propertiesMap)) {
+    if (!isNested && !(key in this.metadata.propertiesMap)) {
       throw new BadRequestException(
         `Order key ${key} is not in ${this.metadata.name}`,
       );
@@ -45,6 +46,11 @@ export function filterOrder<T>(
 
     if (isObject(value)) {
       Object.entries(value).forEach(([_key, _value]) => {
+        try {
+          filterOrder.call(this, { [_key]: _value }, true);
+          return;
+        } catch {}
+
         if (!directionObj[_key]) {
           throw new BadRequestException(
             `Order must be ${Object.keys(directionObj).join(' or ')}`,
@@ -81,10 +87,16 @@ export class ExtendedRepository<T = unknown> extends Repository<T> {
     const queryCondition = gqlQuery
       ? getConditionFromGqlQuery.call(this, gqlQuery, true)
       : { relations: undefined, select: undefined };
+    const relationsQuery = relations ?? queryCondition.relations;
 
     const condition: FindManyOptions<T> = {
-      relations: relations ?? queryCondition.relations,
-      ...(queryCondition.select && { select: queryCondition.select }),
+      relations: relationsQuery,
+      ...(queryCondition.select && {
+        select: {
+          ...queryCondition.select,
+          ...(relationsQuery?.length && { id: true }),
+        },
+      }),
       ...(where && !isEmptyObject(where) && { where: processWhere(where) }),
       ...(order && { order }),
       ...(pagination && {
