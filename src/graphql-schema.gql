@@ -68,6 +68,7 @@ input CompanyDeleteFilter {
   id: IDFilterComparison
   name: StringFieldComparison
   or: [CompanyDeleteFilter!]
+  price_fluctuation: NumberFieldComparison
   ticker_symbol: StringFieldComparison
   total_score: NumberFieldComparison
   unique_symbol: StringFieldComparison
@@ -94,6 +95,7 @@ input CompanyFilter {
   name: StringFieldComparison
   or: [CompanyFilter!]
   price: CompanyFilterCompanyPriceCloseFilter
+  price_fluctuation: NumberFieldComparison
   score: CompanyFilterCompanyScoreFilter
   ticker_symbol: StringFieldComparison
   total_score: NumberFieldComparison
@@ -160,6 +162,7 @@ input CompanyPriceCloseFilterCompanyFilter {
   id: IDFilterComparison
   name: StringFieldComparison
   or: [CompanyPriceCloseFilterCompanyFilter!]
+  price_fluctuation: NumberFieldComparison
   ticker_symbol: StringFieldComparison
   total_score: NumberFieldComparison
   unique_symbol: StringFieldComparison
@@ -215,6 +218,7 @@ enum CompanySortFields {
   exchange_symbol
   id
   name
+  price_fluctuation
   ticker_symbol
   total_score
   unique_symbol
@@ -226,6 +230,7 @@ input CompanyUpdateFilter {
   id: IDFilterComparison
   name: StringFieldComparison
   or: [CompanyUpdateFilter!]
+  price_fluctuation: NumberFieldComparison
   ticker_symbol: StringFieldComparison
   total_score: NumberFieldComparison
   unique_symbol: StringFieldComparison

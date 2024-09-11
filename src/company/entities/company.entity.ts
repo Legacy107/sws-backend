@@ -16,7 +16,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
-  VirtualColumn,
 } from 'typeorm';
 
 import {
@@ -63,14 +62,10 @@ export class Company {
   @OneToOne(() => CompanyScore, (score) => score.company)
   score!: Relation<CompanyScore>;
 
-  @VirtualColumn({
-    query: (alias) =>
-      `SELECT score.total FROM swsCompanyScore score WHERE score.company_id = ${alias}.id`,
-  })
-  total_score: number;
-
   @OneToMany(() => CompanyPriceClose, (price) => price.company)
   price!: Relation<CompanyPriceClose[]>;
+
+  total_score: number;
 }
 
 @ObjectType('Company')
@@ -121,6 +116,9 @@ export class CompanyDTO {
 
   @FilterableField(() => Number, { nullable: true, filterOnly: true })
   total_score: number;
+
+  @FilterableField(() => Number, { nullable: true, filterOnly: true })
+  price_fluctuation?: number;
 }
 
 @ObjectType()
