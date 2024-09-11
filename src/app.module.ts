@@ -2,6 +2,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
@@ -16,6 +17,12 @@ import { HealthModule } from './health/health.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: getEnvPath(`${__dirname}/..`) }),
+    ThrottlerModule.forRootAsync({
+      imports: [SettingModule],
+      inject: [SettingService],
+      useFactory: (settingService: SettingService) =>
+        settingService.throttleUseFactory,
+    }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       imports: [SettingModule],

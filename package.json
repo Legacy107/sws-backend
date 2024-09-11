@@ -45,6 +45,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.3.10",
     "@nestjs/terminus": "^10.2.3",
+    "@nestjs/throttler": "^6.2.1",
     "@nestjs/typeorm": "^10.0.2",
     "@ptc-org/nestjs-query-graphql": "^7.0.0",
     "@ptc-org/nestjs-query-typeorm": "^7.0.0",

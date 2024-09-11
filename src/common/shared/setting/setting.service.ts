@@ -1,5 +1,6 @@
 import { ApolloDriverConfig } from '@nestjs/apollo';
 import { Injectable } from '@nestjs/common';
+import { ThrottlerModuleOptions } from '@nestjs/throttler';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
@@ -27,9 +28,10 @@ export class SettingService {
       ...(!this.utilService.isProduction && {
         plugins: [ApolloServerPluginLandingPageLocalDefault()],
       }),
-      context: ({ req }) => ({ req }),
+      context: ({ req, res }) => ({ req, res }),
       cache: 'bounded',
-      formatError,
+      formatError:
+        this.utilService.nodeEnv === 'production' ? formatError : undefined,
     };
   }
 
@@ -51,5 +53,16 @@ export class SettingService {
       dropSchema: this.utilService.nodeEnv === 'test',
       logging: true, // if you want to see the query log, change it to true
     };
+  }
+
+  get throttleUseFactory():
+    | ThrottlerModuleOptions
+    | Promise<ThrottlerModuleOptions> {
+    return [
+      {
+        ttl: this.utilService.getNumber('THROTTLE_TTL'),
+        limit: this.utilService.getNumber('THROTTLE_LIMIT'),
+      },
+    ];
   }
 }
