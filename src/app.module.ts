@@ -8,7 +8,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
 
-import { CustomCacheModule } from './cache/custom-cache.module';
 import { GqlThrottlerGuard } from './common/guards/throttler.guard';
 import { getEnvPath } from './common/helper/env.helper';
 import { SettingModule } from './common/shared/setting/setting.module';
@@ -47,7 +46,6 @@ import { HealthModule } from './health/health.module';
     }),
     CompanyModule,
     HealthModule,
-    CustomCacheModule.forRoot(),
   ],
   providers: [
     {
