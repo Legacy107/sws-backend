@@ -18,7 +18,6 @@ import { CompanyModule } from './company.module';
 
 describe('CompanyModule', () => {
   let app: INestApplication;
-  let savedId: string;
 
   beforeAll(async () => {
     const datasource = new DataSource({
@@ -72,6 +71,7 @@ describe('CompanyModule', () => {
   });
 
   const created = {
+    id: '46B285BC-B25F-4814-985C-390A4BFA2023',
     name: 'sampleString',
   };
 
@@ -89,10 +89,7 @@ describe('CompanyModule', () => {
       `,
       variables: {
         input: {
-          company: {
-            id: '46B285BC-B25F-4814-985C-390A4BFA2023',
-            ...created,
-          },
+          company: created,
         },
       },
     };
@@ -103,8 +100,6 @@ describe('CompanyModule', () => {
       .set('Content-Type', 'application/json')
       .expect(HttpStatus.OK)
       .expect(({ body: { data } }) => {
-        const { id } = data[keyName];
-        savedId = id;
         expect(data[keyName]).toMatchObject(created);
       });
   });
@@ -146,7 +141,7 @@ describe('CompanyModule', () => {
         }
       `,
       variables: {
-        companyId: savedId,
+        companyId: created.id,
       },
     };
 

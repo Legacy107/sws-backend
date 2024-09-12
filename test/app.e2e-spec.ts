@@ -4,21 +4,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from 'src/app.module';
-import { SignInInput, SignUpInput } from 'src/auth/inputs/auth.input';
-
-const TEST = 'test';
-const userInfo = {
-  username: TEST,
-  nickname: TEST,
-};
-
-const password = {
-  password: TEST,
-};
 
 describe('Container Test (e2e)', () => {
   let app: INestApplication;
-  let savedJwt: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -37,23 +25,26 @@ describe('Container Test (e2e)', () => {
     return request(app.getHttpServer()).get('/health').expect(HttpStatus.OK);
   });
 
-  it('Sign Up', async () => {
-    const keyName = 'signUp';
+  const created = {
+    id: '46B285BC-B25F-4814-985C-390A4BFA2023',
+    name: 'sampleString',
+  };
+
+  it('create', async () => {
+    const keyName = 'createOneCompany';
 
     const gqlQuery = {
       query: `
-        mutation ($input: ${SignUpInput.prototype.constructor.name}!) {
+        mutation CreateOneCompany($input: CreateOneCompanyInput!) {
           ${keyName}(input: $input) {
-            user{
-              ${Object.keys(userInfo).join('\n')}
-            }
+            id
+            ${Object.keys(created).join('\n')}
           }
         }
       `,
       variables: {
         input: {
-          ...userInfo,
-          ...password,
+          company: created,
         },
       },
     };
@@ -64,49 +55,20 @@ describe('Container Test (e2e)', () => {
       .set('Content-Type', 'application/json')
       .expect(HttpStatus.OK)
       .expect(({ body: { data } }) => {
-        expect(data[keyName]).toMatchObject({ user: userInfo });
+        expect(data[keyName]).toMatchObject(created);
       });
   });
 
-  it('Sign In', async () => {
-    const keyName = 'signIn';
-
-    const gqlQuery = {
-      query: `
-        mutation ($input: ${SignInInput.prototype.constructor.name}!) {
-          ${keyName}(input: $input) {
-            jwt
-          }
-        }
-      `,
-      variables: {
-        input: {
-          username: userInfo.username,
-          ...password,
-        },
-      },
-    };
-
-    await request(app.getHttpServer())
-      .post('/graphql')
-      .send(gqlQuery)
-      .set('Content-Type', 'application/json')
-      .expect(HttpStatus.OK)
-      .expect(({ body: { data } }) => {
-        const { jwt } = data[keyName];
-        savedJwt = jwt;
-        expect(data[keyName]).toHaveProperty('jwt');
-      });
-  });
-
-  it('Get Me', async () => {
-    const keyName = 'getMe';
+  it('getMany', async () => {
+    const keyName = 'companies';
 
     const gqlQuery = {
       query: `
         query {
           ${keyName} {
-            ${Object.keys(userInfo).join('\n')}
+            nodes {
+              ${Object.keys(created).join('\n')}
+            }
           }
         }
       `,
@@ -116,10 +78,35 @@ describe('Container Test (e2e)', () => {
       .post('/graphql')
       .send(gqlQuery)
       .set('Content-Type', 'application/json')
-      .set('Authorization', 'Bearer ' + savedJwt)
       .expect(HttpStatus.OK)
       .expect(({ body: { data } }) => {
-        expect(data[keyName]).toMatchObject(userInfo);
+        expect(data[keyName]).toMatchObject({ nodes: [created] });
+      });
+  });
+
+  it('getOne', async () => {
+    const keyName = 'company';
+
+    const gqlQuery = {
+      query: `
+        query ($companyId: ID!) {
+          ${keyName} (id: $companyId) {
+            ${Object.keys(created).join('\n')}
+          }
+        }
+      `,
+      variables: {
+        companyId: created.id,
+      },
+    };
+
+    await request(app.getHttpServer())
+      .post('/graphql')
+      .send(gqlQuery)
+      .set('Content-Type', 'application/json')
+      .expect(HttpStatus.OK)
+      .expect(({ body: { data } }) => {
+        expect(data[keyName]).toMatchObject(created);
       });
   });
 });
