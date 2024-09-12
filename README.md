@@ -28,3 +28,5 @@ Run the production server
 $ yarn build # or npm run build
 $ yarn start # or npm run start
 ```
+
+The server will be running on [http://localhost:8000/graphql](http://localhost:8000/graphql)
