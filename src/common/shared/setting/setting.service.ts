@@ -25,9 +25,7 @@ export class SettingService {
       ),
       sortSchema: true,
       playground: false,
-      ...(!this.utilService.isProduction && {
-        plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      }),
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
       context: ({ req, res }) => ({ req, res }),
       cache: 'bounded',
       formatError:
