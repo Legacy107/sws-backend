@@ -1,3 +1,4 @@
+import { TypeOrmQueryService } from '@ptc-org/nestjs-query-typeorm';
 import { Repository } from 'typeorm';
 
 import { ExtendedRepository } from 'src/common/graphql/customExtended';
@@ -25,6 +26,19 @@ export class MockRepositoryFactory {
         ...Object.getOwnPropertyNames(ExtendedRepository.prototype),
         ...Object.getOwnPropertyNames(repository.prototype),
       ]);
+  }
+}
+
+export type MockQueryService<T = unknown> = Partial<
+  Record<keyof TypeOrmQueryService<T>, jest.Mock>
+>;
+
+export class MockQueryServiceFactory {
+  static getMockQueryService<T>(): () => MockQueryService<T> {
+    return () =>
+      putMockedFunction(
+        Object.getOwnPropertyNames(TypeOrmQueryService.prototype),
+      );
   }
 }
 

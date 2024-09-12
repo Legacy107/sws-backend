@@ -1,6 +1,7 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NestjsQueryGraphQLModule } from '@ptc-org/nestjs-query-graphql';
 
 import { CustomCacheModule } from './cache/custom-cache.module';
+import { GqlThrottlerGuard } from './common/guards/throttler.guard';
 import { getEnvPath } from './common/helper/env.helper';
 import { SettingModule } from './common/shared/setting/setting.module';
 import { SettingService } from './common/shared/setting/setting.service';
@@ -46,6 +48,12 @@ import { HealthModule } from './health/health.module';
     CompanyModule,
     HealthModule,
     CustomCacheModule.forRoot(),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: GqlThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}

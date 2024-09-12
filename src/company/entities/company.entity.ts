@@ -60,10 +60,10 @@ export class Company {
   unique_symbol_slug?: string;
 
   @OneToOne(() => CompanyScore, (score) => score.company)
-  score!: Relation<CompanyScore>;
+  score?: Relation<CompanyScore>;
 
   @OneToMany(() => CompanyPriceClose, (price) => price.company)
-  price!: Relation<CompanyPriceClose[]>;
+  price?: Relation<CompanyPriceClose[]>;
 
   total_score: number;
 }
