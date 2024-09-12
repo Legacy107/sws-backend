@@ -140,8 +140,15 @@ describe('CompanyService', () => {
   describe('applyScoreFilterAndSorting', () => {
     it('should apply score filter and sorting', () => {
       const query: CompanyQuery = {
-        sorting: [{ field: 'total_score', direction: SortDirection.ASC }],
-        filter: { total_score: { gt: 50 } },
+        sorting: [
+          { field: 'total_score', direction: SortDirection.ASC },
+          { field: 'future_score', direction: SortDirection.DESC },
+          { field: 'name', direction: SortDirection.ASC },
+        ],
+        filter: {
+          past_score: { gt: 50 },
+          name: { like: 'Company' },
+        },
       };
 
       const queryBuilder = {

@@ -65,6 +65,11 @@ export class Company {
   @OneToMany(() => CompanyPriceClose, (price) => price.company)
   price?: Relation<CompanyPriceClose[]>;
 
+  dividend_score: number;
+  future_score: number;
+  health_score: number;
+  past_score: number;
+  value_score: number;
   total_score: number;
 }
 
@@ -115,17 +120,48 @@ export class CompanyDTO {
   unique_symbol_slug?: string;
 
   @FilterableField(() => Number, { nullable: true, filterOnly: true })
+  dividend_score: number;
+
+  @FilterableField(() => Number, { nullable: true, filterOnly: true })
+  future_score: number;
+
+  @FilterableField(() => Number, { nullable: true, filterOnly: true })
+  health_score: number;
+
+  @FilterableField(() => Number, { nullable: true, filterOnly: true })
+  past_score: number;
+
+  @FilterableField(() => Number, { nullable: true, filterOnly: true })
+  value_score: number;
+
+  @FilterableField(() => Number, { nullable: true, filterOnly: true })
   total_score: number;
 
   @FilterableField(() => Number, { nullable: true, filterOnly: true })
   price_fluctuation?: number;
 }
 
-@ObjectType()
-export class GetCompanyType {
-  @Field(() => [Company], { nullable: true })
-  data?: Company[];
+export type SnowflakeKeys = (typeof SNOWFLAKE_KEYS)[number];
 
-  @Field(() => Number, { nullable: true })
-  count?: number;
+export const SNOWFLAKE_KEYS = [
+  'dividend_score',
+  'future_score',
+  'health_score',
+  'past_score',
+  'value_score',
+  'total_score',
+] as const;
+
+export const SNOWFLAKE_FOREIGN_KEYS: Record<SnowflakeKeys, string> = {
+  dividend_score: 'dividend',
+  future_score: 'future',
+  health_score: 'health',
+  past_score: 'past',
+  value_score: 'value',
+  total_score: 'total',
+};
+
+export function isSnowflakeKey(key: string): key is SnowflakeKeys {
+  const snowflakeKeysAsStrings: readonly string[] = SNOWFLAKE_KEYS;
+  return snowflakeKeysAsStrings.includes(key);
 }

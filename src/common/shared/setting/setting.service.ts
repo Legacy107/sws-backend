@@ -25,6 +25,7 @@ export class SettingService {
       ),
       sortSchema: true,
       playground: false,
+      introspection: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       context: ({ req, res }) => ({ req, res }),
       cache: 'bounded',

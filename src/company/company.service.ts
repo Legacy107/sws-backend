@@ -12,7 +12,12 @@ import { SelectQueryBuilder } from 'typeorm';
 
 import { CompanyRepository } from './company.repository';
 import { CompanyPriceClose } from './entities/company-price.entity';
-import { Company, CompanyDTO } from './entities/company.entity';
+import {
+  Company,
+  CompanyDTO,
+  SNOWFLAKE_FOREIGN_KEYS,
+  isSnowflakeKey,
+} from './entities/company.entity';
 
 @ArgsType()
 export class CompanyQuery extends QueryArgsType(CompanyDTO) {}
@@ -71,30 +76,35 @@ export class CompanyService extends ProxyQueryService<CompanyDTO> {
     query: CompanyQuery,
     queryBuilder: SelectQueryBuilder<Company>,
   ) {
-    const scoreSorting = query.sorting.find((s) => s.field === 'total_score');
-    if (query.filter?.total_score || scoreSorting) {
+    const scoreSorting = query.sorting.filter((s) => isSnowflakeKey(s.field));
+    const scoreFilter = Object.keys(query.filter).filter((f) =>
+      isSnowflakeKey(f),
+    );
+    if (scoreFilter.length || scoreSorting.length) {
       queryBuilder = queryBuilder.leftJoinAndSelect('Company.score', 'score');
     }
 
     if (query.filter?.total_score) {
       queryBuilder = this.service.filterQueryBuilder.applyFilter(
         queryBuilder,
-        {
-          ['total' as any]: query.filter.total_score,
-        },
+        Object.fromEntries(
+          scoreFilter.map((f) => [SNOWFLAKE_FOREIGN_KEYS[f], query.filter[f]]),
+        ),
         'score',
       );
 
-      delete query.filter.total_score;
+      scoreFilter.forEach((f) => delete query.filter[f]);
     }
 
     if (scoreSorting) {
-      queryBuilder = queryBuilder.addOrderBy(
-        'score.total',
-        scoreSorting.direction,
-      );
+      for (const s of scoreSorting) {
+        queryBuilder = queryBuilder.addOrderBy(
+          `score.${SNOWFLAKE_FOREIGN_KEYS[s.field]}`,
+          s.direction,
+        );
+      }
 
-      query.sorting = query.sorting.filter((s) => s.field !== 'total_score');
+      query.sorting = query.sorting.filter((s) => !isSnowflakeKey(s.field));
     }
 
     return queryBuilder;

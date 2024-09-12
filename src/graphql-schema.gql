@@ -64,14 +64,19 @@ type CompanyConnection {
 
 input CompanyDeleteFilter {
   and: [CompanyDeleteFilter!]
+  dividend_score: NumberFieldComparison
   exchange_symbol: StringFieldComparison
+  future_score: NumberFieldComparison
+  health_score: NumberFieldComparison
   id: IDFilterComparison
   name: StringFieldComparison
   or: [CompanyDeleteFilter!]
+  past_score: NumberFieldComparison
   price_fluctuation: NumberFieldComparison
   ticker_symbol: StringFieldComparison
   total_score: NumberFieldComparison
   unique_symbol: StringFieldComparison
+  value_score: NumberFieldComparison
 }
 
 type CompanyDeleteResponse {
@@ -90,16 +95,21 @@ type CompanyDeleteResponse {
 
 input CompanyFilter {
   and: [CompanyFilter!]
+  dividend_score: NumberFieldComparison
   exchange_symbol: StringFieldComparison
+  future_score: NumberFieldComparison
+  health_score: NumberFieldComparison
   id: IDFilterComparison
   name: StringFieldComparison
   or: [CompanyFilter!]
+  past_score: NumberFieldComparison
   price: CompanyFilterCompanyPriceCloseFilter
   price_fluctuation: NumberFieldComparison
   score: CompanyFilterCompanyScoreFilter
   ticker_symbol: StringFieldComparison
   total_score: NumberFieldComparison
   unique_symbol: StringFieldComparison
+  value_score: NumberFieldComparison
 }
 
 input CompanyFilterCompanyPriceCloseFilter {
@@ -158,14 +168,19 @@ input CompanyPriceCloseFilter {
 
 input CompanyPriceCloseFilterCompanyFilter {
   and: [CompanyPriceCloseFilterCompanyFilter!]
+  dividend_score: NumberFieldComparison
   exchange_symbol: StringFieldComparison
+  future_score: NumberFieldComparison
+  health_score: NumberFieldComparison
   id: IDFilterComparison
   name: StringFieldComparison
   or: [CompanyPriceCloseFilterCompanyFilter!]
+  past_score: NumberFieldComparison
   price_fluctuation: NumberFieldComparison
   ticker_symbol: StringFieldComparison
   total_score: NumberFieldComparison
   unique_symbol: StringFieldComparison
+  value_score: NumberFieldComparison
 }
 
 input CompanyPriceCloseSort {
@@ -215,25 +230,35 @@ input CompanySort {
 }
 
 enum CompanySortFields {
+  dividend_score
   exchange_symbol
+  future_score
+  health_score
   id
   name
+  past_score
   price_fluctuation
   ticker_symbol
   total_score
   unique_symbol
+  value_score
 }
 
 input CompanyUpdateFilter {
   and: [CompanyUpdateFilter!]
+  dividend_score: NumberFieldComparison
   exchange_symbol: StringFieldComparison
+  future_score: NumberFieldComparison
+  health_score: NumberFieldComparison
   id: IDFilterComparison
   name: StringFieldComparison
   or: [CompanyUpdateFilter!]
+  past_score: NumberFieldComparison
   price_fluctuation: NumberFieldComparison
   ticker_symbol: StringFieldComparison
   total_score: NumberFieldComparison
   unique_symbol: StringFieldComparison
+  value_score: NumberFieldComparison
 }
 
 """
